@@ -1,8 +1,16 @@
 .message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     &__paragraph {
-        margin-right: 10px;
         font-style: italic;
         font-size: 24px;
         color: blue;
+    }
+
+    span {
+        margin-right: 10px;
+        font-weight: bold;
     }
 }
