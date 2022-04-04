@@ -1,10 +1,14 @@
 import Avatar from '@mui/material/Avatar';
+import { NavLink } from 'react-router-dom';
+import './Chat.scss';
 
-function Chat ({name}) {
+function Chat ({id, name}) {
     const firstLetter = name[0];
     const secondLetter = name.split(' ')[1][0];
     return (
-        <Avatar sx={{ color: 'blue' }}>{firstLetter+secondLetter}</Avatar>
+        <NavLink to={`/chat/${id}`} className='chat__link'>
+            <Avatar className='chat'>{firstLetter+secondLetter}</Avatar>
+        </NavLink>
     )
 }
 

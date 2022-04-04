@@ -1,57 +1,30 @@
-import React, { useState, useEffect } from 'react';
+import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 import './App.scss';
-import { MessageList } from './Components/MessageList/MessageList';
+import { Chat } from './screens/Chat/Chat';
+import Home from './Components/Home/Home';
+import Profile from './Components/Profile/Profile';
+import { Container } from '@mui/material';
 import ChatList from './Components/ChatList/ChatList';
-import { Form } from './Components/UI/Form/Form';
-import { AUTHORS, CHATS } from './utils/constants';
-import Grid from '@mui/material/Grid';
-import Item from '@mui/material/Grid';
 
 function App() {
-  const [messageList, setMessage] = useState([]);
-
-  const addMessage = newMsg => setMessage([...messageList, newMsg]);
-
-  const sendMessage = text => addMessage({
-    text,
-    author: AUTHORS.human,
-    id: Date.now(),
-  })
-
-  useEffect(() => {
-    if (messageList[messageList.length - 1]?.author  === AUTHORS.human) {
-      const date = new Date();
-      let timer = setTimeout(() => addMessage({
-        text: 
-        `
-          ${date.getHours()}:
-          ${date.getMinutes()}:
-          ${date.getSeconds()}
-        `,
-        author: AUTHORS.robot,
-        id: Date.now(),
-      }), 1500);
-
-      return () => clearTimeout(timer);
-    }
-  }, [messageList]);
-
   return (
-    <div className='app'>
-      <Grid container spacing={2}>
-        <Grid item xs={2}>
-          <Item>
-            <ChatList chats={CHATS} />
-          </Item>
-        </Grid>
-        <Grid item xs={10}>
-          <Item>
-            <MessageList messages={messageList}/>
-            <Form onSubmit={sendMessage} />
-          </Item>
-        </Grid>
-      </Grid>
-    </div>
+    <BrowserRouter>
+      <Container maxWidth="lg" className='app' sx={{ backgroundColor: 'purple', marginBottom: '30px' }}>
+        <ul className='app__link-list'>
+          <li><NavLink to='/' style={({ isActive }) => ({color: isActive ? 'gray' : 'white'})}>Home</NavLink></li>
+          <li><NavLink to='/profile' style={({ isActive }) => ({color: isActive ? 'gray' : 'white'})}>Profile</NavLink></li>
+          <li><NavLink to='/chat' style={({ isActive }) => ({color: isActive ? 'gray' : 'white'})}>Chats</NavLink></li>
+        </ul>
+      </Container>
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path='/chat' element={<ChatList />}>
+          <Route path=':id' element={<Chat />} />
+        </Route>
+        <Route path='/profile' element={<Profile />} />
+        <Route path='*' element={<h1>404 ERROR</h1>} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

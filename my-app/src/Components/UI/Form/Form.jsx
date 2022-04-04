@@ -18,7 +18,7 @@ export const Form = ({onSubmit}) => {
     const inputRef = useRef(null);
 
     useEffect(() => {
-        inputRef.current?.lastElementChild.children[0].focus();
+        inputRef.current?.focus();
     },[value]);
         
     return (
@@ -31,7 +31,7 @@ export const Form = ({onSubmit}) => {
                         value={value} 
                         onChange={handleChange}
                         autoFocus
-                        ref={inputRef}
+                        inputRef={inputRef}
             />
             <Button type='submit' variant='contained'>Send</Button>
         </form>

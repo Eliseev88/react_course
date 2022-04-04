@@ -1,0 +1,22 @@
+.chat {
+    &.MuiAvatar-root {
+        margin-bottom: 10px;
+        width: 56px;
+        height: 56px;
+        cursor: pointer;
+        transition: transform .2s linear;
+
+        &:hover {
+            transform: scale(1.1);
+        }
+    }
+}
+
+.chat__link {
+    text-decoration: none;
+    display: block;
+}
+
+.active .chat {
+    color: aqua;
+}
