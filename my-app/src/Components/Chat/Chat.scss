@@ -17,6 +17,12 @@
     display: block;
 }
 
+.chat__wrapper {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
 .active .chat {
     color: aqua;
 }
