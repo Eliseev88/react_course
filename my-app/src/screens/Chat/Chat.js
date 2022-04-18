@@ -28,7 +28,7 @@ export function Chat() {
     return (
       <>
         <MessageList messages={messages}/>
-        <Form onSubmit={sendMessage} />
+        <Form onSubmit={sendMessage} child='Send' />
       </>
     )
   }

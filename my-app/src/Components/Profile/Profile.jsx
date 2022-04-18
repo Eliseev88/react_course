@@ -44,7 +44,7 @@ function ProfileToConnect({ name, showName, changeName, changeCheckBox }) {
             <h1>This is Profile page</h1>
             {showName && <span>{name}</span>}
             <Checkbox onChange={setShowName} />
-            <Form onSubmit={handleSubmit} />
+            <Form onSubmit={handleSubmit} child='Change' />
         </Container>
     )
 }
@@ -61,4 +61,4 @@ const mapDispatchToProps = {
     changeCheckBox: () => toggleCheckbox,
 }
 
-export const Profile = connect(mapStateToProps, mapDispatchToProps)(ProfileToConnect)
+export const Profile = connect(mapStateToProps, mapDispatchToProps)(ProfileToConnect);
