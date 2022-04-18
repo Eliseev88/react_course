@@ -4,20 +4,35 @@ import { Container } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Item from '@mui/material/Grid';
 import { Form } from '../UI/Form/Form';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { selectChats } from '../../store/chats/selectors';
+import { addChat, deleteChat } from '../../store/chats/actions';
+import { addMessage, deleteMessage } from '../../store/messages/actions';
 
-const ChatList = ({chats, addChat, deleteChat}) => {
+const ChatList = () => {
+
+    const chats = useSelector(selectChats, shallowEqual);
+    const dispatch = useDispatch();
 
     const handleSubmit = newChatName => {
         const newChat = {
             id: Date.now(),
             name: newChatName,
         }
-        addChat(newChat);
+        const newMessage = {
+            chatId: newChat.id,
+            message: [], 
+        };
+
+        dispatch(addChat(newChat));
+        dispatch(addMessage(newMessage));
     }
 
     const handleDelete = chatId => {
-        deleteChat(chatId);
+       dispatch(deleteChat(chatId));
+       dispatch(deleteMessage(chatId));
     }
+
     return (
         <Container maxWidth='lg'>
             <Grid container spacing={2}>
