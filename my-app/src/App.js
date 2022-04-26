@@ -8,6 +8,7 @@ import ChatList from './Components/ChatList/ChatList';
 import { PrivateRoute } from './Components/PrivateRoute/PrivateRoute';
 import { useState } from 'react';
 import { PublicRoute } from './Components/PublicRoute/PublicRoute';
+import { Articles } from './screens/Articles/Articles';
 
 function App() {
 
@@ -28,6 +29,7 @@ function App() {
             <li><NavLink to='/' style={({ isActive }) => ({ color: isActive ? 'gray' : 'white' })}>Home</NavLink></li>
             <li><NavLink to='/profile' style={({ isActive }) => ({ color: isActive ? 'gray' : 'white' })}>Profile</NavLink></li>
             <li><NavLink to='/chat' style={({ isActive }) => ({ color: isActive ? 'gray' : 'white' })}>Chats</NavLink></li>
+            <li><NavLink to='/articles' style={({ isActive }) => ({ color: isActive ? 'gray' : 'white' })}>Articles</NavLink></li>
           </ul>
         </Container>
         <Routes>
@@ -40,6 +42,7 @@ function App() {
           <Route path='/profile' element={<PrivateRoute authed={authed} />} >
             <Route path='' element={<Profile onLogout={handleLogout} />} />
           </Route>
+          <Route path='/articles' element={<Articles />} />
           <Route path='*' element={<h1>404 ERROR</h1>} />
         </Routes>
       </BrowserRouter>

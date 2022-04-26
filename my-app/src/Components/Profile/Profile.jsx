@@ -45,7 +45,7 @@ function ProfileToConnect({ onLogout, name, showName, changeName, changeCheckBox
             <Button onClick={onLogout}>Logout</Button>
             {showName && <span>{name}</span>}
             <Checkbox onChange={setShowName} />
-            <Form onSubmit={handleSubmit} />
+            <Form onSubmit={handleSubmit} child='Change' />
         </Container>
     )
 }

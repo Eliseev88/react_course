@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { useEffect } from 'react';
 
-export const Form = ({onSubmit}) => {
+export const Form = ({onSubmit, child}) => {
     const [value, setValue] = useState('');
     
     const handleSubmit = event => {
@@ -33,7 +33,7 @@ export const Form = ({onSubmit}) => {
                         autoFocus
                         inputRef={inputRef}
             />
-            <Button type='submit' variant='contained'>Send</Button>
+            <Button type='submit' variant='contained'>{child}</Button>
         </form>
     )
 }
