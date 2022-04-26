@@ -39,7 +39,7 @@ const ChatList = () => {
                 <Grid item xs={2}>
                     <Item>
                         {chats.map(el => <Chat key={el.id} id={el.id} name={el.name} handleDelete={handleDelete} />)}
-                        <Form onSubmit={handleSubmit} />
+                        <Form onSubmit={handleSubmit} child='Create' />
                     </Item>
                 </Grid>
                 <Grid item xs={10}>
