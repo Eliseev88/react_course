@@ -1,4 +1,4 @@
-import { Checkbox, Container } from '@mui/material';
+import { Button, Checkbox, Container } from '@mui/material';
 import { useSelector, useDispatch, connect } from 'react-redux';
 import { setName, toggleCheckbox } from '../../store/profile/actions';
 import { Form } from '../UI/Form/Form';
@@ -29,7 +29,7 @@ import { selectName, selectShowName } from '../../store/profile/selectors';
 
 // export default Profile;
 
-function ProfileToConnect({ name, showName, changeName, changeCheckBox }) {
+function ProfileToConnect({ onLogout, name, showName, changeName, changeCheckBox }) {
 
     const setShowName = () => {
         changeCheckBox()
@@ -42,6 +42,7 @@ function ProfileToConnect({ name, showName, changeName, changeCheckBox }) {
     return (
         <Container maxWidth='lg'>
             <h1>This is Profile page</h1>
+            <Button onClick={onLogout}>Logout</Button>
             {showName && <span>{name}</span>}
             <Checkbox onChange={setShowName} />
             <Form onSubmit={handleSubmit} />
@@ -61,4 +62,4 @@ const mapDispatchToProps = {
     changeCheckBox: () => toggleCheckbox,
 }
 
-export const Profile = connect(mapStateToProps, mapDispatchToProps)(ProfileToConnect)
+export const Profile = connect(mapStateToProps, mapDispatchToProps)(ProfileToConnect);

@@ -1,40 +1,25 @@
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 import './App.scss';
 import { Chat } from './screens/Chat/Chat';
-//import { CHATS } from './utils/constants';
 import Home from './Components/Home/Home';
 import { Profile } from './Components/Profile/Profile';
 import { Container } from '@mui/material';
 import ChatList from './Components/ChatList/ChatList';
-//import { useState } from 'react';
-
-// const initMessages = CHATS.reduce((acc, chat) => {
-//   acc[chat.id] = [];
-//   return acc;
-// }, {});
+import { PrivateRoute } from './Components/PrivateRoute/PrivateRoute';
+import { useState } from 'react';
+import { PublicRoute } from './Components/PublicRoute/PublicRoute';
 
 function App() {
 
-  // const [chats, setChats] = useState(CHATS);
-  //const [messages, setMessages] = useState(initMessages);
-  
-  // const addNewChat = newChat => {
-  //   // setChats(prevChats => [...prevChats, newChat]);
-  //   //setMessages(prevMessages => ({...prevMessages, [newChat.id]: []}));
-  // }
+  const [authed, setAuthed] = useState(false);
 
-  // const removeChat = id => {
-  //   // setChats(prevChats => prevChats.filter(chat => chat.id !== id));
-  //   // setMessages(prevMessages => {
-  //   //   const newMessages = {...prevMessages};
-  //   //   delete newMessages[id];
-  //   //   return newMessages;
-  //   // });
-  // }
+  const handleLogin = () => {
+    setAuthed(true);
+  } 
 
-  // const addNewMessage = (newMsg, id) => {
-  //   //setMessages({ ...messages, [id]: [...messages[id], newMsg] });
-  // }
+  const handleLogout = () => {
+    setAuthed(false);
+  } 
 
   return (
       <BrowserRouter>
@@ -46,11 +31,15 @@ function App() {
           </ul>
         </Container>
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={ <PublicRoute authed={authed} /> }>
+            <Route path='' element={<Home onAuthed={ handleLogin } />} />
+          </Route>
           <Route path='/chat' element={<ChatList />}>
             <Route path=':id' element={<Chat />} />
           </Route>
-          <Route path='/profile' element={<Profile />} />
+          <Route path='/profile' element={<PrivateRoute authed={authed} />} >
+            <Route path='' element={<Profile onLogout={handleLogout} />} />
+          </Route>
           <Route path='*' element={<h1>404 ERROR</h1>} />
         </Routes>
       </BrowserRouter>
