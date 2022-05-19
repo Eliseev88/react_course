@@ -1,8 +1,11 @@
 import { Button, Checkbox, Container } from '@mui/material';
 import { useSelector, useDispatch, connect } from 'react-redux';
-import { setName, toggleCheckbox } from '../../store/profile/actions';
+import { initProfileTrack, setName, setNameFB, setShowName, stopProfileTrack, toggleCheckbox } from '../../store/profile/actions';
 import { Form } from '../UI/Form/Form';
 import { selectName, selectShowName } from '../../store/profile/selectors';
+import { logOut, userNameRef, userRef, userShowNameRef } from '../../services/firebase';
+import { useEffect, useState } from 'react';
+import { set } from 'firebase/database';
 
 // function Profile() {
 //     const dispatch = useDispatch()
@@ -29,20 +32,31 @@ import { selectName, selectShowName } from '../../store/profile/selectors';
 
 // export default Profile;
 
-function ProfileToConnect({ onLogout, name, showName, changeName, changeCheckBox }) {
+function ProfileToConnect({ name, showName, changeName, changeCheckBox }) {
+    const dispatch = useDispatch();
 
     const setShowName = () => {
-        changeCheckBox()
+        changeCheckBox();
+        set(userShowNameRef, !showName);
     }
 
     const handleSubmit = text => {
         changeName(text);
+        set(userNameRef, text);
     }
+
+    useEffect(() => {
+        dispatch(initProfileTrack());
+
+        return () => {
+            dispatch(stopProfileTrack());
+        };
+    }, []);
 
     return (
         <Container maxWidth='lg'>
             <h1>This is Profile page</h1>
-            <Button onClick={onLogout}>Logout</Button>
+            <Button onClick={logOut}>Logout</Button>
             {showName && <span>{name}</span>}
             <Checkbox onChange={setShowName} />
             <Form onSubmit={handleSubmit} child='Change' />

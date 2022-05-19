@@ -6,9 +6,11 @@ import { Profile } from './Components/Profile/Profile';
 import { Container } from '@mui/material';
 import ChatList from './Components/ChatList/ChatList';
 import { PrivateRoute } from './Components/PrivateRoute/PrivateRoute';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PublicRoute } from './Components/PublicRoute/PublicRoute';
 import { Articles } from './screens/Articles/Articles';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './services/firebase';
 
 function App() {
 
@@ -20,7 +22,19 @@ function App() {
 
   const handleLogout = () => {
     setAuthed(false);
-  } 
+  }
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        handleLogin();
+      } else {
+        handleLogout();
+      }
+    });
+    
+    return unsubscribe;
+  }, []);
 
   return (
       <BrowserRouter>
@@ -35,6 +49,7 @@ function App() {
         <Routes>
           <Route path='/' element={ <PublicRoute authed={authed} /> }>
             <Route path='' element={<Home onAuthed={ handleLogin } />} />
+            <Route path='signup' element={<Home onAuthed={ handleLogin } isSignup />} />
           </Route>
           <Route path='/chat' element={<ChatList />}>
             <Route path=':id' element={<Chat />} />

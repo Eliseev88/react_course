@@ -8,10 +8,13 @@ import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { selectChats } from '../../store/chats/selectors';
 import { addChat, deleteChat } from '../../store/chats/actions';
 import { addMessage, deleteMessage } from '../../store/messages/actions';
+import { chatsRef, getChatRefById, getMsgsRefById } from '../../services/firebase';
+import { onValue, set, remove } from 'firebase/database';
+import { useEffect, useState } from 'react';
 
 const ChatList = () => {
-
-    const chats = useSelector(selectChats, shallowEqual);
+    const [chats, setChats] = useState([]);
+    // const chats = useSelector(selectChats, shallowEqual);
     const dispatch = useDispatch();
 
     const handleSubmit = newChatName => {
@@ -24,14 +27,26 @@ const ChatList = () => {
             message: [], 
         };
 
-        dispatch(addChat(newChat));
-        dispatch(addMessage(newMessage));
+        // dispatch(addChat(newChat));
+        set(getChatRefById(newChat.id), newChat);
+        set(getMsgsRefById(newChat.id), { exists: true, });
+        // dispatch(addMessage(newMessage));
     }
 
     const handleDelete = chatId => {
-       dispatch(deleteChat(chatId));
-       dispatch(deleteMessage(chatId));
+        remove(getChatRefById(chatId));
+        set(getMsgsRefById, null);
+       // dispatch(deleteChat(chatId));
+       // dispatch(deleteMessage(chatId));
     }
+
+    useEffect(() => {
+        const unsubscribe = onValue(chatsRef, (snapshot) => {
+            setChats(Object.values(snapshot.val() || {}));
+        });
+
+        return unsubscribe;
+    }, []);
 
     return (
         <Container maxWidth='lg'>
