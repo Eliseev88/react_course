@@ -1,41 +1,40 @@
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom';
 import './App.scss';
 import { Chat } from './screens/Chat/Chat';
-//import { CHATS } from './utils/constants';
 import Home from './Components/Home/Home';
 import { Profile } from './Components/Profile/Profile';
 import { Container } from '@mui/material';
 import ChatList from './Components/ChatList/ChatList';
+import { PrivateRoute } from './Components/PrivateRoute/PrivateRoute';
+import { useEffect, useState } from 'react';
+import { PublicRoute } from './Components/PublicRoute/PublicRoute';
 import { Articles } from './screens/Articles/Articles';
-//import { useState } from 'react';
-
-// const initMessages = CHATS.reduce((acc, chat) => {
-//   acc[chat.id] = [];
-//   return acc;
-// }, {});
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './services/firebase';
 
 function App() {
 
-  // const [chats, setChats] = useState(CHATS);
-  //const [messages, setMessages] = useState(initMessages);
-  
-  // const addNewChat = newChat => {
-  //   // setChats(prevChats => [...prevChats, newChat]);
-  //   //setMessages(prevMessages => ({...prevMessages, [newChat.id]: []}));
-  // }
+  const [authed, setAuthed] = useState(false);
 
-  // const removeChat = id => {
-  //   // setChats(prevChats => prevChats.filter(chat => chat.id !== id));
-  //   // setMessages(prevMessages => {
-  //   //   const newMessages = {...prevMessages};
-  //   //   delete newMessages[id];
-  //   //   return newMessages;
-  //   // });
-  // }
+  const handleLogin = () => {
+    setAuthed(true);
+  } 
 
-  // const addNewMessage = (newMsg, id) => {
-  //   //setMessages({ ...messages, [id]: [...messages[id], newMsg] });
-  // }
+  const handleLogout = () => {
+    setAuthed(false);
+  }
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        handleLogin();
+      } else {
+        handleLogout();
+      }
+    });
+    
+    return unsubscribe;
+  }, []);
 
   return (
       <BrowserRouter>
@@ -48,11 +47,16 @@ function App() {
           </ul>
         </Container>
         <Routes>
-          <Route path='/' element={<Home />} />
+          <Route path='/' element={ <PublicRoute authed={authed} /> }>
+            <Route path='' element={<Home onAuthed={ handleLogin } />} />
+            <Route path='signup' element={<Home onAuthed={ handleLogin } isSignup />} />
+          </Route>
           <Route path='/chat' element={<ChatList />}>
             <Route path=':id' element={<Chat />} />
           </Route>
-          <Route path='/profile' element={<Profile />} />
+          <Route path='/profile' element={<PrivateRoute authed={authed} />} >
+            <Route path='' element={<Profile onLogout={handleLogout} />} />
+          </Route>
           <Route path='/articles' element={<Articles />} />
           <Route path='*' element={<h1>404 ERROR</h1>} />
         </Routes>
